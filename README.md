@@ -1,4 +1,4 @@
-# 📊 Analyse des locaux commerciaux — Montréal (EDA Python)
+#  Analyse des locaux commerciaux — Montréal (EDA Python)
 
 Projet de **data analysis** visant à analyser l’occupation des locaux commerciaux à Montréal afin d’identifier :
 
@@ -9,7 +9,6 @@ Projet de **data analysis** visant à analyser l’occupation des locaux commerc
 
  Objectif : démontrer une capacité complète en **data cleaning, analyse exploratoire et visualisation**.
 
----
 
 ##  Objectifs du projet
 
