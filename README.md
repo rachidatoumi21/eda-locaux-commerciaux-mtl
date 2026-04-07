@@ -1,1 +1,145 @@
---- ```md # 🏙️ EDA — Locaux commerciaux à Montréal (Statuts d’occupation & vacance) Analyse exploratoire (EDA) des **locaux commerciaux** de Montréal afin d’identifier les **zones et segments** où la **vacance** (“vacant à louer”) est la plus présente, et d’en tirer des **insights business**. > Projet orienté *Data Analysis* : nettoyage, exploration, visualisation, conclusions. --- ## 🎯 Objectifs & questions business - Quel est le **taux global de vacance** des locaux commerciaux ? - Quels **arrondissements** ont le plus de locaux vacants (volume) ? - Quels arrondissements ont le **taux de vacance** le plus élevé (proportion) ? - Quels **secteurs** (SECTEUR_PME) concentrent la vacance ? - Quels **types de commerce** (T_COMMERCE) sont les plus touchés ? --- ## 📦 Données - Source : jeu de données “occupation commerciale” (Ville de Montréal / open data). - Fichiers utilisés : - `data/occupation-commerciale-2025.csv` (brut) - `data/occupation-commerciale-2025-fixed.csv` (corrigé pour lecture stable) > Note : le fichier `*-fixed.csv` est créé car certaines lignes du CSV brut peuvent contenir des guillemets/formatage qui perturbent `pandas.read_csv`. --- ## 🧹 Nettoyage & préparation Principales étapes (voir notebook) : 1. **Correction du CSV** (création d’une version `*-fixed.csv`) 2. **Suppression des doublons** 3. **Nettoyage des champs texte** (trim/espaces) : - `ARRONDISSEMENT`, `QUARTIER`, `SECTEUR_PME`, `ORIGINE`, `T_COMMERCE` 4. **Conversion de la date** `DATE_CREATION` en datetime 5. Construction d’un filtre “vacants” à partir de `VACANT_A_LOUER` --- ## ✅ KPI (résumé) - **Nombre total de locaux** : 28 621 - **Nombre vacants à louer** : 712 - **Taux global de vacance** : **2,49%** > Même si la vacance globale est faible, l’analyse montre une **concentration** dans certains arrondissements/secteurs. --- ## 📊 Résultats (visualisations) > Les figures ci-dessous sont générées depuis le notebook et enregistrées dans `reports/figures/`. ### 1) Répartition du statut “vacant à louer” ![Répartition du statut vacant à louer](reports/figures/01_status_vacant.png) 📌 **Lecture** : la très grande majorité des locaux ne sont pas vacants, ce qui rend utile l’analyse “où se concentrent les vacants”. --- ### 2) Top 10 arrondissements — **nombre** de locaux vacants ![Top 10 arrondissements - volume vacants](reports/figures/02_top_arrondissements_vacants_volume.png) 📌 **Lecture** : certains arrondissements dominent en **volume** (effet “taille” : plus de locaux → plus de vacants possibles). --- ### 3) Top 10 arrondissements — **taux** de vacance ![Top 10 arrondissements - taux vacance](reports/figures/03_top_arrondissements_vacants_rate.png) 📌 **Lecture** : ce graphique corrige l’effet “taille” et met en évidence les arrondissements où la vacance est **proportionnellement** plus forte. --- ### 4) Top secteurs — taux de vacance (min 200 locaux) ![Top secteurs - taux vacance](reports/figures/04_top_secteurs_rate_min200.png) 📌 **Lecture** : filtrage `min 200` pour éviter les secteurs trop petits et sortir un signal plus fiable. --- ### 5) Top types de commerce — taux de vacance ![Top types de commerce - taux vacance](reports/figures/05_top_types_commerce_rate.png) 📌 **Lecture** : repère les catégories commerciales à risque (ex : commerces de rue vs autres types). --- ### 6) Répartition des vacants par secteur (camembert) ![Répartition vacants par secteur](reports/figures/06_vacants_repartition_secteur_pie.png) 📌 **Lecture** : la vacance est **fortement concentrée** : quelques secteurs regroupent la majorité des locaux vacants. --- ## 🧠 Insights business (exemples) - **Vacance globale faible** (~2,5%), mais **concentrée** → enjeu localisé plutôt que généralisé. - Différence importante entre : - **Volume** de vacants (où il y a beaucoup de locaux) - **Taux** de vacance (où la vacance est proportionnellement élevée) - Des secteurs dominent la distribution des vacants → opportunité pour : - cibler des mesures de revitalisation - orienter la prospection immobilière / commerciale - prioriser les interventions sur les zones à forte vacance --- ## 🧪 Reproductibilité ### 1) Installer les dépendances ```bash pip install pandas matplotlib ``` ### 2) Lancer le notebook Ouvrir : - `notebooks/EDA.ipynb` et exécuter les cellules dans l’ordre. --- ## 🗂️ Structure du projet ```txt data/ occupation-commerciale-2025.csv occupation-commerciale-2025-fixed.csv notebooks/ EDA.ipynb reports/ figures/ 01_status_vacant.png 02_top_arrondissements_vacants_volume.png 03_top_arrondissements_vacants_rate.png 04_top_secteurs_rate_min200.png 05_top_types_commerce_rate.png 06_vacants_repartition_secteur_pie.png README.md ``` --- ## ⚠️ Limites - Certains champs peuvent contenir des valeurs manquantes (ex : quartiers/secteurs). - “Vacant à louer” dépend du champ `VACANT_A_LOUER` (qualité/standardisation). - Les résultats sont une **photo** à la date du dataset, pas une série temporelle multi-années. --- ## 🚀 Améliorations possibles - Ajouter une **carte** (choroplèthe) par arrondissement (si géométrie disponible) - Étudier l’évolution temporelle via `DATE_CREATION` (tendance) - Exporter un mini dashboard (Power BI / Streamlit) --- ## 👤 Auteur - Ton Nom — *Data Analysis / Portfolio Project* ``` --- ## ✅ Comment “ajouter les images” (très simple) Tu as déjà les graphes dans ton notebook (ils s’affichent). Il te manque juste **l’enregistrement en PNG**. ### 1) Crée le dossier des figures Dans la racine du projet : ```bash mkdir reports mkdir reports/figures ``` ### 2) Dans le notebook, après chaque graphe : ajoute `plt.savefig(...)` Exemple (juste avant `plt.show()`): ```python import os os.makedirs("reports/figures", exist_ok=True) plt.savefig("reports/figures/01_status_vacant.png", dpi=200, bbox_inches="tight") plt.show() ``` Tu fais pareil pour chaque figure avec les noms du README : - `01_status_vacant.png` - `02_top_arrondissements_vacants_volume.png` - `03_top_arrondissements_vacants_rate.png` - `04_top_secteurs_rate_min200.png` - `05_top_types_commerce_rate.png` - `06_vacants_repartition_secteur_pie.png` --- ## ✅
+# 📊 Analyse des locaux commerciaux — Montréal (EDA Python)
+
+Projet de **data analysis** visant à analyser l’occupation des locaux commerciaux à Montréal afin d’identifier :
+
+- les zones avec le plus de vacance  
+- les tendances d’occupation  
+- les opportunités économiques  
+- les signaux de risque commercial  
+
+👉 Objectif : démontrer une capacité complète en **data cleaning, analyse exploratoire et visualisation**.
+
+---
+
+## 🎯 Objectifs du projet
+
+- Analyser la répartition des locaux commerciaux  
+- Identifier les zones avec forte vacance  
+- Comprendre les types de commerces dominants  
+- Détecter les tendances par arrondissement / quartier  
+- Produire des **visualisations claires et exploitables**
+
+---
+
+## 📁 Données
+
+📊 Source : Données ouvertes — Ville de Montréal  
+
+### Contenu :
+- Arrondissement  
+- Quartier  
+- Type de commerce  
+- Statut (occupé / vacant)  
+- Date de création  
+- Origine des données  
+
+---
+
+## 🧹 Préparation des données
+
+### ✔ Nettoyage
+- Suppression des doublons  
+- Nettoyage des chaînes (`strip`)  
+- Gestion des valeurs manquantes  
+- Conversion des dates  
+
+### ✔ Feature engineering
+- Création de variables utiles  
+- Standardisation des catégories  
+
+### ✔ Validation
+- Vérification cohérence des données  
+- Contrôle des valeurs aberrantes  
+
+---
+
+## 📊 Analyse exploratoire (EDA)
+
+### 📍 Répartition des statuts (occupé vs vacant)
+
+![Répartition des statuts](reports/figures/status_distribution.png)
+
+👉 **Insight :**
+- La majorité des locaux sont occupés  
+- Une proportion non négligeable reste vacante  
+
+---
+
+### 🏙️ Vacance par arrondissement
+
+![Vacance par arrondissement](reports/figures/vacancy_by_arrondissement.png)
+
+👉 **Insight :**
+- Certains arrondissements concentrent plus de locaux vacants  
+- Indicateur important pour les investisseurs  
+
+---
+
+### 🏢 Types de commerces les plus fréquents
+
+![Types de commerces](reports/figures/top_commerce_types.png)
+
+👉 **Insight :**
+- Forte concentration sur certains secteurs  
+- Possibilité de saturation du marché  
+
+---
+
+### 📈 Évolution dans le temps
+
+![Évolution temporelle](reports/figures/time_evolution.png)
+
+👉 **Insight :**
+- Permet d’identifier des tendances économiques  
+- Impact possible de facteurs externes  
+
+---
+
+### 🗺️ Analyse par quartier
+
+![Analyse par quartier](reports/figures/quartier_analysis.png)
+
+👉 **Insight :**
+- Forte disparité entre quartiers  
+- Opportunités ciblées selon localisation  
+
+---
+
+## 💡 Insights clés
+
+**1. Vacance non négligeable**  
+→ Indique des difficultés économiques dans certaines zones  
+
+**2. Concentration commerciale**  
+→ Certains secteurs sont saturés  
+
+**3. Inégalités géographiques**  
+→ Certains arrondissements performent mieux  
+
+**4. Opportunités d’investissement**  
+→ Zones avec vacance élevée = potentiel  
+
+---
+
+## 📌 Recommandations
+
+- Réduire les locaux vacants (incitations économiques)  
+- Diversifier les types de commerce  
+- Cibler les zones faibles  
+- Suivre les tendances dans le temps  
+
+---
+
+## 🛠️ Outils utilisés
+
+- Python (pandas, matplotlib, seaborn)  
+- Jupyter Notebook  
+- VS Code  
+
+---
+
+## 🔁 Reproduire le projet
+
+```bash
+# Lancer le notebook
+notebooks/EDA_locaux_commerciaux.ipynb
